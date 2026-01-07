@@ -1,42 +1,29 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
 import { ProductCard } from './components/ProductCard';
-export class ProductsPage extends BasePage {
+import { LoggedInPage } from './LoggedInPage';
+
+export class ProductsPage extends LoggedInPage {
   constructor(page: Page) {
     super(page);
+  }
+
+  async goto() {
+    await super.goto('/inventory.html'); 
   }
 
   private items(): Locator {
     return this.page.locator('.inventory_item');
   }
 
-  get cartBadge(): Locator {
-    return this.page.locator('.shopping_cart_badge');
-  }
-
-  async goto() {
-    await this.page.goto('/inventory.html');
-  }
-
-  // --- Lógica de Componentes ---
-
-  /**
-   * Crea una instancia de ProductCard basada en el nombre del producto
-   */
   productCardByName(name: string): ProductCard {
     const item = this.items().filter({ hasText: name }).first();
     return new ProductCard(this.page, item);
   }
 
-  /**
-   * Retorna todas las tarjetas como componentes
-   */
   async getProductCards(): Promise<ProductCard[]> {
     const locators = await this.items().all();
     return locators.map(loc => new ProductCard(this.page, loc));
   }
-
-  // --- Métodos de Acción (Delegados al componente) ---
 
   async getProductPrice(name: string): Promise<string> {
     const card = this.productCardByName(name);
