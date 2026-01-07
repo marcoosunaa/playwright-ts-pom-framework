@@ -1,6 +1,6 @@
-import { test, expect } from './fixtures';
-import { Users } from '../src/data/Users';
-import { ErrorMessages } from '../src/data/Errors';
+import { test, expect } from '../../src/fixtures/page-objects';
+import { Users } from '../../src/data/Users';
+import { ErrorMessages } from '../../src/data/Errors';
 
 test.describe('Login Feature - Sauce Demo', () => {
   test('successful login with standard_user', async ({ loginPage }) => {
