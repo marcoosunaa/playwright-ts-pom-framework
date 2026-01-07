@@ -35,18 +35,45 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'setup',
+      testMatch: '**/auth/auth.setup.ts',
+    },
+    // Login tests - NO storage state (unauthenticated)
+    {
+      name: 'chromium-login',
+      testMatch: '**/auth/login.spec.ts',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox-login',
+      testMatch: '**/auth/login.spec.ts',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit-login',
+      testMatch: '**/auth/login.spec.ts',
+      use: { ...devices['Desktop Safari'] },
+    },
+    // Products and other tests - WITH storage state (authenticated)
+    {
+      name: 'chromium',
+      testMatch: '**/e2e/**/*.spec.ts',
+      use: { ...devices['Desktop Chrome'], storageState: 'playwright/.auth/user.json' },
+      dependencies: ['setup'],
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      testMatch: '**/e2e/**/*.spec.ts',
+      use: { ...devices['Desktop Firefox'], storageState: 'playwright/.auth/user.json' },
+      dependencies: ['setup'],
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      testMatch: '**/e2e/**/*.spec.ts',
+      use: { ...devices['Desktop Safari'], storageState: 'playwright/.auth/user.json' },
+      dependencies: ['setup'],
     },
 
     /* Test against mobile viewports. */
