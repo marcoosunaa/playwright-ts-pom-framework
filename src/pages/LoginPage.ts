@@ -1,15 +1,15 @@
 import { Page, Locator } from '@playwright/test';
+import { BasePage } from './BasePage'; // Importación necesaria
 import { UserCreds } from '../data/Users';
 
-export class LoginPage {
-  readonly page: Page;
-
+export class LoginPage extends BasePage {
+  
   constructor(page: Page) {
-    this.page = page;
+    super(page);
   }
 
   async goto() {
-    await this.page.goto('/');
+    await super.goto('/');
   }
 
   private usernameField() {
@@ -20,22 +20,18 @@ export class LoginPage {
     return this.page.locator('#password');
   }
 
-  private loginButton() {
+  get loginButton(): Locator {
     return this.page.locator('#login-button');
   }
 
   async login(user: UserCreds) {
     await this.usernameField().fill(user.username);
     await this.passwordField().fill(user.password);
-    await this.loginButton().click();
+    await this.loginButton.click();
   }
 
-  async getErrorText() {
+    async getErrorText() {
     const locator = this.page.locator('[data-test="error"]');
     return locator.textContent();
-  }
-
-  get title(): Locator {
-    return this.page.locator('.title');
   }
 }
